@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { db } from "@/lib/db";
@@ -85,11 +86,13 @@ export default async function ThemePage({ params }: PageProps) {
       {/* Header */}
       <header className="relative w-full z-10 max-w-7xl mx-auto px-6 py-6 flex items-center justify-between border-b border-white/[0.03]">
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cosmic-purple to-cosmic-teal flex items-center justify-center p-[1px]">
-            <div className="w-full h-full rounded-full bg-[#09090b] flex items-center justify-center">
-              <span className="text-xs font-semibold text-cosmic-teal">S</span>
-            </div>
-          </div>
+          <Image
+            src="/logo.png"
+            alt="Somnium Logo"
+            width={32}
+            height={32}
+            className="rounded-full object-cover"
+          />
           <span className="font-semibold text-lg tracking-wider text-white">
             SOMNIUM
           </span>
