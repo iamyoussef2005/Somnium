@@ -56,12 +56,6 @@ export default function Home() {
             >
               Subconscious Map
             </button>
-            <button 
-              onClick={() => scrollTo(formRef, "form")}
-              className="hover:text-white transition-colors cursor-pointer"
-            >
-              Dream Log
-            </button>
             <Link href="/themes" className="hover:text-white transition-colors">
               Constellations
             </Link>
