@@ -186,17 +186,17 @@ export default function ConstellationCanvas() {
         }
       }
 
-      // 3. Mouse influence (subtle repulsion)
-      const mouseInfluenceRadius = 150;
+      // 3. Mouse influence (subtle gravitational attraction/pull)
+      const mouseInfluenceRadius = 130;
       for (const node of nodes) {
-        const dx = node.x - mouse.x;
-        const dy = node.y - mouse.y;
+        const dx = mouse.x - node.x; // Pointing towards mouse cursor
+        const dy = mouse.y - node.y; // Pointing towards mouse cursor
         const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
         if (dist < mouseInfluenceRadius) {
-          const force = ((mouseInfluenceRadius - dist) / mouseInfluenceRadius) * 0.2;
-          node.vx += (dx / dist) * force * 0.15;
-          node.vy += (dy / dist) * force * 0.15;
+          const force = ((mouseInfluenceRadius - dist) / mouseInfluenceRadius) * 0.25;
+          node.vx += (dx / dist) * force * 0.18;
+          node.vy += (dy / dist) * force * 0.18;
         }
       }
 
