@@ -42,7 +42,7 @@ export async function GET() {
     }
 
     // 3. Construct Nodes Array
-    const nodes = themes.map((theme) => ({
+    const nodes = themes.map((theme: any) => ({
       id: theme.id,
       name: theme.name,
       slug: theme.slug,
