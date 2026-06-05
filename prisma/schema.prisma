@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Dream {
+  id          String       @id @default(uuid())
+  createdAt   DateTime     @default(now())
+  textContent String
+  location    String?
+  userId      String?
+  themes      DreamTheme[]
+
+  @@index([userId])
+}
+
+model Theme {
+  id          String       @id @default(uuid())
+  createdAt   DateTime     @default(now())
+  name        String       @unique
+  slug        String       @unique
+  description String?
+  dreams      DreamTheme[]
+}
+
+model DreamTheme {
+  id      Int    @id @default(autoincrement())
+  dreamId String
+  themeId String
+
+  dream Dream @relation(fields: [dreamId], references: [id], onDelete: Cascade)
+  theme Theme @relation(fields: [themeId], references: [id], onDelete: Cascade)
+
+  @@unique([dreamId, themeId])
+}
