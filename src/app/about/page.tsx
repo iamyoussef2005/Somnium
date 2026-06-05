@@ -20,8 +20,8 @@ export default function AboutPage() {
           <Image
             src="/logo.png"
             alt="Somnium Logo"
-            width={32}
-            height={32}
+            width={44}
+            height={44}
             className="rounded-full object-cover"
           />
           <span className="font-semibold text-lg tracking-wider text-white">
