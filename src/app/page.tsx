@@ -94,9 +94,9 @@ export default function Home() {
           <div className="absolute bottom-8 -left-4 w-2 h-2 rounded-full bg-fuchsia-400/40 animate-float-particle" style={{ animationDelay: "-4s" }} />
           <div className="absolute -bottom-2 right-16 w-1 h-1 rounded-full bg-cosmic-purple/40 animate-float-particle" style={{ animationDelay: "-6s" }} />
 
-          {/* Badge/pill above headline */}
+          {/* Badge above headline */}
           <div className="flex justify-center mb-4">
-            <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[11px] font-medium tracking-widest uppercase text-cosmic-teal/80 border border-cosmic-teal/15 bg-cosmic-teal/[0.04] shadow-[0_0_15px_rgba(0,242,254,0.06)]">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase text-cosmic-teal/80">
               ✦ The Collective Dream Network
             </span>
           </div>
