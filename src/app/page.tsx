@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { Show, SignInButton, UserButton } from "@clerk/nextjs";
@@ -15,9 +15,14 @@ const ConstellationCanvas = dynamic(
 export default function Home() {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const formRef = useRef<HTMLDivElement | null>(null);
+  const [activeHighlight, setActiveHighlight] = useState<"map" | "form" | null>(null);
 
-  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>) => {
+  const scrollTo = (ref: React.RefObject<HTMLDivElement | null>, section: "map" | "form") => {
     ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setActiveHighlight(section);
+    setTimeout(() => {
+      setActiveHighlight(null);
+    }, 1800);
   };
 
   return (
@@ -46,13 +51,13 @@ export default function Home() {
           </Link>
           <nav className="hidden md:flex items-center gap-8 text-sm text-zinc-400 font-medium">
             <button 
-              onClick={() => scrollTo(mapRef)}
+              onClick={() => scrollTo(mapRef, "map")}
               className="hover:text-white transition-colors cursor-pointer"
             >
               Subconscious Map
             </button>
             <button 
-              onClick={() => scrollTo(formRef)}
+              onClick={() => scrollTo(formRef, "form")}
               className="hover:text-white transition-colors cursor-pointer"
             >
               Dream Log
@@ -116,7 +121,14 @@ export default function Home() {
         {/* Dashboard Grid Layout */}
         <div className="section-fade-delay w-full grid grid-cols-1 lg:grid-cols-3 gap-8 items-start text-left">
           {/* Interactive Constellation Canvas Map (2/3 width) */}
-          <div ref={mapRef} className="lg:col-span-2 w-full aspect-[16/9] rounded-2xl bg-zinc-950/40 border-glow overflow-hidden relative p-1 group">
+          <div 
+            ref={mapRef} 
+            className={`lg:col-span-2 w-full aspect-[16/9] rounded-2xl bg-zinc-950/40 border-glow overflow-hidden relative p-1 group transition-all duration-700 ${
+              activeHighlight === "map"
+                ? "ring-2 ring-cosmic-teal/60 shadow-[0_0_40px_rgba(0,242,254,0.3)] scale-[1.006]"
+                : ""
+            }`}
+          >
             {/* Live badge overlay */}
             <div className="absolute top-3 left-3 z-10 flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-sm border border-white/[0.08] text-[10px] font-semibold tracking-widest uppercase text-zinc-300">
               <span className="relative flex h-2 w-2">
@@ -129,7 +141,14 @@ export default function Home() {
           </div>
 
           {/* Dream Submission Form / SignIn (1/3 width) */}
-          <div ref={formRef} className="w-full flex justify-center">
+          <div 
+            ref={formRef} 
+            className={`w-full flex justify-center transition-all duration-700 ${
+              activeHighlight === "form"
+                ? "ring-2 ring-cosmic-purple/60 shadow-[0_0_40px_rgba(139,92,246,0.3)] scale-[1.015] rounded-2xl"
+                : ""
+            }`}
+          >
             <Show when="signed-in">
               <DreamForm />
             </Show>
