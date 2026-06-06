@@ -64,13 +64,18 @@ export default function ConstellationCanvas() {
         
         if (!active) return;
 
+        const totalNodes = data.nodes.length;
+        // scale factor goes from 1.0 (for <= 20 nodes) down to 0.4 (for >= 100 nodes)
+        const scaleFactor = Math.max(0.4, Math.min(1.0, 20 / Math.max(20, totalNodes)));
+
         // Initialize node physics properties
         const initializedNodes = data.nodes.map((node: APINode, index: number) => {
           // Determine color based on index
           const color = index % 2 === 0 ? "#00f2fe" : "#8b5cf6"; // Alternating cosmic-teal and cosmic-purple
           
-          // Radius scales with weight: base radius 8px + weight * 3px, capped at 30px
-          const radius = Math.min(8 + node.weight * 3, 30);
+          // Radius scales with weight, then downscaled by scaleFactor. Minimum radius of 3px.
+          const baseRadius = 8 + node.weight * 3;
+          const radius = Math.max(3, Math.min(baseRadius * scaleFactor, 30 * scaleFactor));
 
           // Random starting positions inside container dimensions
           const containerWidth = containerRef.current?.clientWidth || 800;
@@ -152,6 +157,9 @@ export default function ConstellationCanvas() {
       const links = linksRef.current;
       const mouse = mouseRef.current;
 
+      const totalNodes = nodes.length;
+      const scaleFactor = Math.max(0.4, Math.min(1.0, 20 / Math.max(20, totalNodes)));
+
       // --- Physics Update ---
       // 1. Gravity / Central attraction
       const gravity = 0.005;
@@ -163,8 +171,8 @@ export default function ConstellationCanvas() {
       }
 
       // 2. Pairwise Repulsion
-      const repulsion = 0.8;
-      const minDistance = 100;
+      const repulsion = 0.8 * scaleFactor;
+      const minDistance = 100 * scaleFactor;
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const n1 = nodes[i];
@@ -187,7 +195,7 @@ export default function ConstellationCanvas() {
       }
 
       // 3. Mouse influence (subtle gravitational attraction/pull)
-      const mouseInfluenceRadius = 130;
+      const mouseInfluenceRadius = Math.max(60, 130 * scaleFactor);
       for (const node of nodes) {
         const dx = mouse.x - node.x; // Pointing towards mouse cursor
         const dy = mouse.y - node.y; // Pointing towards mouse cursor
@@ -291,7 +299,7 @@ export default function ConstellationCanvas() {
 
       // 2. Draw Nodes (Stars)
       for (const node of nodes) {
-        const glowRadius = node.radius + (node.currentGlow * 15);
+        const glowRadius = node.radius + (node.currentGlow * 15 * scaleFactor);
         
         ctx.save();
         ctx.shadowBlur = 10 + (node.currentGlow * 15);
