@@ -3,6 +3,23 @@ import { db } from "@/lib/db";
 import { GoogleGenAI } from "@google/genai";
 import { auth } from "@clerk/nextjs/server";
 
+// Standardized list of ~119 dream archetypes to ensure logical consolidation of stars
+const ALLOWED_ARCHETYPES = [
+  "Abandonment", "Attic", "Ancestor", "Animals", "Authority", "Basement", "Battle", "Bedroom",
+  "Birth", "Blindness", "Blood", "Book", "Bridge", "Castle", "Cave", "Chaos", "Chase", "Child",
+  "City", "Classroom", "Climbing", "Clock", "Clothing", "Cloud", "Companion", "Courtroom", "Crowd",
+  "Darkness", "Death", "Desert", "Doppelganger", "Door", "Dragon", "Driving", "Drowning", "Earth",
+  "Eclipse", "Escape", "Exam", "Falling", "Family", "Fear", "Feast", "Fire", "Fish", "Flight",
+  "Floating", "Flood", "Forest", "Forgotten", "Funeral", "Garden", "Ghost", "Giant", "Glass",
+  "Gold", "Guide", "Horizon", "Hospital", "House", "Hunger", "Illness", "Insect", "Invisibility",
+  "Joy", "Key", "Labyrinth", "Light", "Lightning", "Lost", "Lover", "Magic", "Mask", "Mirror",
+  "Money", "Monster", "Mountain", "Nakedness", "Ocean", "Parallel World", "Paralysis", "Portal",
+  "Prison", "Rain", "Rebirth", "Revelation", "River", "Road", "Ruins", "School", "Search", "Shadow",
+  "Snake", "Spider", "Storm", "Stranger", "Swimming", "Sword", "Teacher", "Teeth", "Teleportation",
+  "Time", "Tower", "Train", "Transformation", "Trap", "Treasure", "Tree", "Tunnel", "Wall", "War",
+  "Water", "Weapon", "Wedding", "Wind", "Witch", "Wolf", "Wound", "Writing"
+];
+
 // Programmatic helper to generate clean, URL-friendly slugs
 function generateSlug(text: string): string {
   return text
@@ -54,7 +71,7 @@ export async function POST(request: Request) {
       contents: textContent,
       config: {
         systemInstruction:
-          "You are an objective dream parser. Analyze the user's raw dream story. Extract up to 3 core underlying symbolic themes or central topics. For each theme, provide a 1-word or 2-word title (name) and a brief, poetic 1-sentence interpretation of what that symbol represents in the dream.",
+          "You are an objective dream parser. Analyze the user's raw dream story. Extract up to 3 core underlying symbolic themes or central topics. For each extracted theme, select the single most applicable name from the allowed list of archetypes. Provide a brief, poetic 1-sentence interpretation of what that symbol represents in the specific context of this dream.",
         responseMimeType: "application/json",
         responseSchema: {
           type: "object",
@@ -64,7 +81,10 @@ export async function POST(request: Request) {
               items: {
                 type: "object",
                 properties: {
-                  name: { type: "string" },
+                  name: { 
+                    type: "string", 
+                    enum: ALLOWED_ARCHETYPES 
+                  },
                   description: { type: "string" },
                 },
                 required: ["name", "description"],
