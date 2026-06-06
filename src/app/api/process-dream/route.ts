@@ -71,7 +71,11 @@ export async function POST(request: Request) {
       contents: textContent,
       config: {
         systemInstruction:
-          "You are an objective dream parser. Analyze the user's raw dream story. Extract up to 3 core underlying symbolic themes or central topics. For each extracted theme, select the single most applicable name from the allowed list of archetypes. Provide a brief, poetic 1-sentence interpretation of what that symbol represents in the specific context of this dream.",
+          `You are an objective dream parser. Analyze the user's raw dream story. Extract up to 3 core underlying symbolic themes or central topics.
+          For each extracted theme, select the single most applicable name from the following allowed list of archetypes. You MUST match the name EXACTLY (case-sensitive) from this list:
+          ${ALLOWED_ARCHETYPES.join(", ")}
+          
+          For each theme, provide the selected archetype name (as the 'name' property) and a brief, poetic 1-sentence interpretation of what that symbol represents in the specific context of this dream (as the 'description' property).`,
         responseMimeType: "application/json",
         responseSchema: {
           type: "object",
@@ -81,10 +85,7 @@ export async function POST(request: Request) {
               items: {
                 type: "object",
                 properties: {
-                  name: { 
-                    type: "string", 
-                    enum: ALLOWED_ARCHETYPES 
-                  },
+                  name: { type: "string" },
                   description: { type: "string" },
                 },
                 required: ["name", "description"],
